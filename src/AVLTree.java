@@ -989,7 +989,7 @@ public class AVLTree {
                 currNodeInHigher.setParent(x);
                 x.setLeft(currNodeInHigher);
                 x.setRight(rootLower);
-                if (currNodeInHigher.getParent()!=null) {
+                if (parentC!=null) {
                     parentC.setRight(x);
                     x.setParent(parentC);
                 }else {
@@ -1003,7 +1003,7 @@ public class AVLTree {
                 currNodeInHigher.setParent(x);
                 x.setLeft(rootLower);
                 x.setRight(currNodeInHigher);
-                if (currNodeInHigher.getParent()!=null) {
+                if (parentC!=null) {
                     parentC.setLeft(x);
                     x.setParent(parentC);
                 }else {
