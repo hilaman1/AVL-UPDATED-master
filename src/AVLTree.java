@@ -1,6 +1,6 @@
-import java.util.ArrayDeque;//todo-delete this
 import java.util.Arrays;
-import java.util.Queue;//todo-delete this
+// name: Hila Man , username: hilaman1 , ID: 315212092
+// name: Gal Grudka , username: galgrudka , ID: 206960064
 
 public class AVLTree {
     private IAVLNode root;
@@ -47,7 +47,6 @@ public class AVLTree {
      * complexity - O(logn)
      */
     private IAVLNode treePosition(IAVLNode nodeX, int k) {
-        //needs to be implemented
         IAVLNode posNode = null;
         while (nodeX.isRealNode() && nodeX!=null){
             posNode=nodeX;
@@ -94,53 +93,61 @@ public class AVLTree {
      * return which case are we at currently, to ease on dealing with symmetrical cases while inserting node
      */
     private String insertionCase(IAVLNode currNode){
+//        for saving space complexity, we'll create each array one time only
+        int[] oneOne = new int[]{1, 1};
+        int[] twoOne = new int[]{2, 1};
+        int[] oneTwo = new int[]{1, 2};
+        int[] oneZero = new int[]{1, 0};
+        int[] zeroOne = new int[]{0, 1};
+        int[] zeroTwo = new int[]{0, 2};
+        int[] twoZero = new int[]{2, 0};
+
         if (currNode != null && currNode.getParent() != null) {
             int[] rankDifCurrNode = rankDifference(currNode);
             int[] rankDiffParent = rankDifference(currNode.getParent());
-            if (((Arrays.equals(rankDifCurrNode, new int[]{1, 1}) ||
-                    (Arrays.equals(rankDifCurrNode, new int[]{2, 1})) ||
-                    (Arrays.equals(rankDifCurrNode, new int[]{1, 2})))
-                    && (Arrays.equals(rankDiffParent, new int[]{1, 0}) ||
-                    (Arrays.equals(rankDiffParent, new int[]{0, 1}))))) {
+            if (((Arrays.equals(rankDifCurrNode, oneOne) ||
+                    (Arrays.equals(rankDifCurrNode, twoOne)) ||
+                    (Arrays.equals(rankDifCurrNode, oneTwo)))
+                    && (Arrays.equals(rankDiffParent, oneZero) ||
+                    (Arrays.equals(rankDiffParent, zeroOne))))) {
                 return "case1";
             }
             //single left rotation & demote(z)--> re-balancing completed return +2
-            else if (Arrays.equals(rankDiffParent, new int[]{0, 2})
-                    && Arrays.equals(rankDifCurrNode, new int[]{1, 2})) {
+            else if (Arrays.equals(rankDiffParent, zeroTwo)
+                    && Arrays.equals(rankDifCurrNode, oneTwo)) {
                 return "case2left";
             }
             //double rotation: first right rotation (a-x) then left rotation (a-z)
             // & demote(x) ,demote(z), promote(a) & return +5 re-balancing completed
-            else if (Arrays.equals(rankDifCurrNode, new int[]{1, 2})
-                    && Arrays.equals(rankDiffParent, new int[]{2, 0})) {
+            else if (Arrays.equals(rankDifCurrNode, oneTwo)
+                    && Arrays.equals(rankDiffParent, twoZero)) {
                 return "case2right";
             }
             //double rotation: first left rotation (x-b) then left rotation (b-z)
             // & demote(x) ,demote(z), promote(b) & return +5 re-balancing completed
-            else if (Arrays.equals(rankDifCurrNode, new int[]{2, 1})
-                    && Arrays.equals(rankDiffParent, new int[]{0, 2})) {
+            else if (Arrays.equals(rankDifCurrNode, twoOne)
+                    && Arrays.equals(rankDiffParent, zeroTwo)) {
                 return "case3left";
             }
 
             //single left rotation & demote(z)--> re-balancing completed return +2
-            else if (Arrays.equals(rankDifCurrNode, new int[]{2, 1})
-                    && Arrays.equals(rankDiffParent, new int[]{2, 0})) {
+            else if (Arrays.equals(rankDifCurrNode, twoOne)
+                    && Arrays.equals(rankDiffParent, twoZero)) {
                 return "case3right";
             }
             // special cases for join method
-            else if (Arrays.equals(rankDifCurrNode, new int[]{1, 1})
-                    && Arrays.equals(rankDiffParent, new int[]{0, 2})) {
+            else if (Arrays.equals(rankDifCurrNode, oneOne)
+                    && Arrays.equals(rankDiffParent, zeroTwo)) {
                 return "caseJoinLeft"; // special case for join
                 // when the subtree of x (after join) is a left subtree to nodeC
                 // sol: right rotation x-c & promote(x)
             }
-            else if (Arrays.equals(rankDifCurrNode, new int[]{1, 1})
-                    && Arrays.equals(rankDiffParent, new int[]{2, 0})) {
+            else if (Arrays.equals(rankDifCurrNode, oneOne)
+                    && Arrays.equals(rankDiffParent, twoZero)) {
                 return "caseJoinRight"; // special case for join
                 // when the subtree of x (after join) is a right subtree to nodeC
                 // sol: left rotation x-c & promote(x)
             }
-
         }
         return "";
     }
@@ -315,10 +322,17 @@ public class AVLTree {
         if (parent == null){
             return "";
         }
+        //        for saving space complexity, we'll create each array one time only
+        int[] oneOne = new int[]{1, 1};
+        int[] twoOne = new int[]{2, 1};
+        int[] oneTwo = new int[]{1, 2};
+        int[] twoTwo = new int[]{2, 2};
+        int[] oneThree = new int[]{1, 3};
+        int[] threeOne = new int[]{3, 1};
+
         // check cases of right / left child outside
-        // TODO: 04/12/2021 create arrays one time in order to save in space complexity
         int[] rankDiffParent = rankDifference(parent);
-        if (Arrays.equals(rankDiffParent, new int[]{2, 2})) {
+        if (Arrays.equals(rankDiffParent, twoTwo)) {
             return "case1";
         }
 
@@ -326,23 +340,23 @@ public class AVLTree {
             int[] rankDiffLChild = rankDifference(parent.getLeft());
 //      rotation right on z-y, promote(y) demote(z)
             //      return 3 + rebalance (parent)
-            if (((Arrays.equals(rankDiffParent, new int[]{1, 3}) &&
+            if (((Arrays.equals(rankDiffParent, oneThree) &&
 //                    (!parent.getRight().isRealNode()) && (parent.getLeft().isRealNode()) &&
-                    (Arrays.equals(rankDiffLChild, new int[]{1, 1}))))) {
+                    (Arrays.equals(rankDiffLChild, oneOne))))) {
                 return "case2left";
             }
             //      rotation right on z-y, 2xdemote(z)
             //      return 3 + rebalance (parent)
-            if (((Arrays.equals(rankDiffParent, new int[]{1, 3}) &&
+            if (((Arrays.equals(rankDiffParent, oneThree) &&
 //                    (!parent.getRight().isRealNode()) && (parent.getLeft().isRealNode()) &&
-                    (Arrays.equals(rankDiffLChild, new int[]{1, 2}))))) {
+                    (Arrays.equals(rankDiffLChild, oneTwo))))) {
                 return "case3left";
             }
             //      rotation left on y-a, rotation right on a-z, 2xdemote(z), demote(y), promote(a)
             //      return 6 + rebalance (parent)
-            if (((Arrays.equals(rankDiffParent, new int[]{1, 3}) &&
+            if (((Arrays.equals(rankDiffParent, oneThree) &&
 //                    (!parent.getRight().isRealNode()) && (parent.getLeft().isRealNode()) &&
-                    (Arrays.equals(rankDiffLChild, new int[]{2, 1}))))) {
+                    (Arrays.equals(rankDiffLChild, twoOne))))) {
                 return "case4left";
             }
         }
@@ -351,25 +365,25 @@ public class AVLTree {
             //      rotation left on z-y, promote(y) demote(z)
             //      return 3 + rebalance (parent)
             //      parent is Unary
-            if (((Arrays.equals(rankDiffParent, new int[]{3, 1}) &&
+            if (((Arrays.equals(rankDiffParent, threeOne) &&
 //                    (parent.getRight().isRealNode()) && (!parent.getLeft().isRealNode()) &&
-                    (Arrays.equals(rankDiffRChild, new int[]{1, 1}))))) {
+                    (Arrays.equals(rankDiffRChild, oneOne))))) {
                 return "case2right";
             }
 
             //      rotation left on z-y, 2xdemote(z)
             //      return 3 + rebalance (parent)
-            if (((Arrays.equals(rankDiffParent, new int[]{3, 1}) &&
+            if (((Arrays.equals(rankDiffParent, threeOne) &&
 //                    (parent.getRight().isRealNode()) && (!parent.getLeft().isRealNode()) &&
-                    (Arrays.equals(rankDiffRChild, new int[]{2, 1}))))) {
+                    (Arrays.equals(rankDiffRChild, twoOne))))) {
                 return "case3right";
             }
 
             //      rotation right on y-a, rotation left on a-z, 2xdemote(z), demote(y), promote(a)
             //      return 6 + rebalance (parent)
-            if (((Arrays.equals(rankDiffParent, new int[]{3, 1}) &&
+            if (((Arrays.equals(rankDiffParent, threeOne) &&
 //                    (parent.getRight().isRealNode()) && (!parent.getLeft().isRealNode()) &&
-                    (Arrays.equals(rankDiffRChild, new int[]{1, 2}))))) {
+                    (Arrays.equals(rankDiffRChild, oneTwo))))) {
                 return "case4right";
             }
         }
@@ -617,9 +631,7 @@ public class AVLTree {
                     IAVLNode RightSon = parent.getRight(); //y
                     IAVLNode RightLeftSon = RightSon.getLeft(); //a
                     singleRightRotation(parent.getRight().getLeft()); //y-a
-                    this.bfs_print();
                     singleLeftRotation(RightLeftSon); //a-z
-                    this.bfs_print();
                     demote(parent); //z
                     demote(parent); //z
                     demote(RightSon); //y
@@ -689,7 +701,7 @@ public class AVLTree {
             return null;
         }
         IAVLNode currNode = this.root;
-        while (currNode.getLeft()!=null){
+        while (currNode.getLeft().isRealNode()){
             currNode=currNode.getLeft();
         }
         return currNode;
@@ -719,13 +731,12 @@ public class AVLTree {
      * @return the node with minimum key
      */
     public IAVLNode findMax() {
-        //todo-check viability
 //        using a pointer to maxNode node for O(1)
         if (this.empty()){
             return null;
         }
         IAVLNode currNode = this.root;
-        while (currNode.getRight()!=null){
+        while (currNode.getRight().isRealNode()){
             currNode=currNode.getRight();
         }
         return currNode;
@@ -1087,149 +1098,6 @@ public class AVLTree {
             }
         }
     }
-    //todo-added print funcionality is here -delete later
-
-    public void bfs_print(){
-        IAVLNode v = this.getRoot();
-        int height = v.getHeight();
-        IAVLNode[][] table = new IAVLNode[height+1][(int) Math.pow(2,height)];
-
-        Queue<IAVLNode> q = new ArrayDeque<>();
-
-
-        q.add(v);
-
-        for (int h=0; h <= height; h++){
-            int levelsize = q.size();
-            for (int i=0; i<levelsize; i++){
-                v = q.remove();
-                table[h][i] = v;
-
-
-                if (v.isRealNode() && v.getLeft().isRealNode())
-                    q.add(v.getLeft());
-                else{
-                    q.add(EXTERNALNODE);
-                }
-                if (v.isRealNode() && v.getRight().isRealNode())
-                    q.add(v.getRight());
-                else{
-                    q.add(EXTERNALNODE);
-                }
-
-            }
-        }
-        IAVLNode[][] alignedtable = this.aligningPrintTable(table);
-        String[][] treetable = this.makeTreeAlike(alignedtable);
-        printtreetable(treetable);
-    }
-
-
-    private IAVLNode[][] aligningPrintTable (IAVLNode[][] table){
-        int height = this.root.getHeight();
-        IAVLNode[][] alignedtable = new IAVLNode[height+1][2*((int) Math.pow(2,height))-1];
-        for (int i=0; i<alignedtable.length; i++)
-            for (int j=0; j<alignedtable[0].length; j++)
-                alignedtable[i][j] = null;
-
-
-        for (int r=height; r>=0; r--){
-            if (r == height){
-                for (int i=0; i<table[0].length; i++)
-                    alignedtable[r][i*2] = table[r][i];
-            } else {
-
-                int firstloc = 0;
-                int secondloc = 0;
-                boolean firstNodeSeen = false;
-                int currnode = 0;
-
-                for (int j=0; j<alignedtable[0].length; j++){
-                    if (alignedtable[r+1][j] != null){
-                        if (firstNodeSeen){
-                            secondloc = j;
-                            alignedtable[r][(firstloc+secondloc)/2] = table[r][currnode++];
-                            firstNodeSeen = false;
-                        } else {
-                            firstloc = j;
-                            firstNodeSeen = true;
-                        }
-                    }
-                }
-            }
-        }
-
-        return alignedtable;
-    }
-
-    private String[][] makeTreeAlike (IAVLNode[][] alignedtable){
-        int height = this.root.getHeight();
-        String[][] treetable = new String[(height+1)*3-2][2*((int) Math.pow(2,height))-1];
-
-        for (int r=0; r<treetable.length; r++){
-            if (r%3 == 0){
-                for (int j=0; j<treetable[0].length; j++) {
-                    IAVLNode v = alignedtable[r/3][j];
-                    if (v != null && v.isRealNode()) {
-                        String k = "" + v.getKey();
-                        if (k.length() == 1)
-                            k = k + " ";
-                        treetable[r][j] = k;
-                    } else{
-                        if (v != null)
-                            treetable[r][j] = "x ";
-                        else
-                            treetable[r][j] = "  ";
-                    }
-                }
-            }
-
-            else {
-                if (r%3 == 1) {
-                    for (int j=0; j<treetable[0].length; j++){
-                        if (!treetable[r-1][j].equals("  "))
-                            treetable[r][j] = "| ";
-                        else
-                            treetable[r][j] = "  ";
-                    }
-                } else { //r%3 == 2
-                    continue;
-                }
-            }
-        }
-        for (int r=0; r<treetable.length; r++){
-            if (r%3 == 2){
-                boolean write = false;
-                for (int j=0; j<treetable[0].length; j++){
-                    if (!treetable[r+1][j].equals("  ")){
-                        if (write)
-                            treetable[r][j] = "__";
-                        write = !write;
-                    }
-                    if (write)
-                        treetable[r][j] = "__";
-                    else
-                        treetable[r][j] = "  ";
-                }
-            }
-        }
-
-
-
-        return treetable;
-    }
-
-    private void printtreetable (String[][] treetable){
-        for (int i=0; i< treetable.length; i++){
-            for (int j=0; j< treetable[0].length; j++){
-                System.out.print(treetable[i][j]);
-                if (j == treetable[0].length-1)
-                    System.out.print("\n");
-            }
-        }
-    }
-//todo-print funcionality is ended here-delete later.
-
 
     /**
      * public interface IAVLNode

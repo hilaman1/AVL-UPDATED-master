@@ -184,7 +184,6 @@ public class Tests {
         int[] values = new int[]{16, 24, 36, 19, 44, 28, 61, 74, 83, 64, 52, 65, 86, 93, 88};
         for (int val : values) {
             tree.insert(val, "" + val);
-            tree.bfs_print();
         }
         if (!tree.min().equals("16")) {
             return false;
@@ -194,7 +193,6 @@ public class Tests {
             return false;
         }
 //        System.out.println("passed this 2_"+tree.maxNode.getValue());
-        tree.bfs_print();
         if (!checkBalanceOfTree(tree.getRoot())) {
             System.out.println("check here 3");
             return false;
